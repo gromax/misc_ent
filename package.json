@@ -1,6 +1,6 @@
 {
   "name": "misc.ent",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/gromax/misc_ent"
@@ -14,7 +14,8 @@
     "start": "webpack-dashboard webpack-dev-server -d --hot --config webpack.config.js --watch"
   },
   "keywords": [
-    "misc", "ent"
+    "misc",
+    "ent"
   ],
   "author": "Maxence Klein",
   "license": "ISC",
