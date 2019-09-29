@@ -5,6 +5,7 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <% if (isAdmin) { %><h3><span class="badge badge-warning">Admin</span></h3><% } %>
     <% if (isOff) { %>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item"><a class="nav-link js-login" href="./api/cas"><i class="fa fa-sign-in"></i> Connexion</a></li>
