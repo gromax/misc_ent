@@ -9,7 +9,10 @@ Router = Backbone.Router.extend {
   }
   showHome: ->
     controller = require("apps/home/show/home_show_controller.coffee").controller
-    controller.showOffHome()
+    if app.Auth.get("logged_in")
+      controller.showOnHome()
+    else
+      controller.showOffHome()
   logout: ->
     self = @
     if app.Auth.get("logged_in")
