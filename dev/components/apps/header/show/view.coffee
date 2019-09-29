@@ -18,6 +18,7 @@ HeaderView = View.extend {
     {
       isOff: isOff
       displayName: if isOff then "Déconnecté" else @auth.displayName
+      isAdmin: @auth.isAdmin
       version: app.version
     }
 
