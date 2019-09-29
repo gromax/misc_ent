@@ -1,5 +1,6 @@
 import { View, CollectionView } from 'backbone.marionette'
 import off_tpl from 'templates/home/show/home-off.tpl'
+import on_tpl from 'templates/home/show/home-on.tpl'
 import notFound_tpl from 'templates/home/show/home-off.tpl'
 import { app } from 'app'
 
@@ -23,7 +24,16 @@ OffPanel = View.extend {
     }
 }
 
+OnPanel = View.extend {
+  className: "jumbotron"
+  template: on_tpl
+  triggers: {
+  }
+
+}
+
 export {
   OffPanel
+  OnPanel
   NotFoundView
 }
