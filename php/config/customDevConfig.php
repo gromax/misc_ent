@@ -12,8 +12,14 @@
   define("SMTP_PORT",200);
 
   // cas
-  define("PATH_TO_AUTH", "http://llocalhost/miscEnt/api/cas");
-  define("PATH_TO_ENT_CAS","https://ent.iledefrance.fr/cas/login?service=https://miscent.goupill.fr/api/session");
-  define("PATH_TO_ENT_CAS_VALIDATE","https://ent.iledefrance.fr/cas/serviceValidate");
-  define("CAS_MAIL_DOMAIN","ent.iledefrance.fr");
+  define("PATH_TO_AUTH", "http://localhost/miscEnt/api/cas");
+  define("PATH_TO_ENT_CAS","https://adresseducas/cas/login?service=https://miscent.goupill.fr/api/session");
+  define("PATH_TO_ENT_CAS_VALIDATE","https://adresseducas/cas/serviceValidate");
+  define("CAS_MAIL_DOMAIN","adresseducas.fr");
+
+  // tests
+  define("USER_LOGIN_DEV","user.test");
+
+  // admins
+  define("ADMIN_ACCOUNTS","user.test");
 ?>
