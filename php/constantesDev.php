@@ -5,14 +5,6 @@
 
   // Chemin du dossier
   define("BDD_CONFIG","../php/config/bddConfig.php");
-  if (file_exists("../php/config/customDevConfig.php"))
-  {
-    require_once("../php/config/customDevConfig.php");
-  }
-  else
-  {
-    require_once("../php/defConfig.php");
-  }
-
+  require_once("../php/config/customDevConfig.php");
 
 ?>
