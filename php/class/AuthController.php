@@ -27,10 +27,13 @@ class AuthController
 
   public static function devGetCasSession()
   {
+    $login = USER_LOGIN_DEV;
+    $isAdmin = (in_array($login,explode(";",ADMIN_ACCOUNTS)));
     $loggedUserData = array(
-      "login" => "user.test",
+      "login" => $login,
       "displayName" => "Utilisateur de test",
-      "type" => "Élève"
+      "type" => "Élève",
+      "isAdmin" => $isAdmin
     );
     SC::get()->setParam("loggedUserData", $loggedUserData);
     header('HTTP/1.0 302 Found');
@@ -56,12 +59,14 @@ class AuthController
         curl_close($curl);
         if (preg_match("#<cas:authenticationSuccess>#", $resp)){
           $error = false;
+          $isAdmin = false;
           // capture du login cas
           $pattern ="#<cas:user>(.+)</cas:user>#";
           preg_match($pattern, $resp, $matches, PREG_OFFSET_CAPTURE);
           if(count($matches) > 0)
           {
               $login = $matches[1][0];
+              $isAdmin = (in_array($login,explode(";",ADMIN_ACCOUNTS)));
           }
           else
           {
@@ -98,7 +103,7 @@ class AuthController
           }
           else
           {
-            $loggedUserData = array("login" => $login, "displayName" => $displayName, "type" => $type );
+            $loggedUserData = array("login" => $login, "displayName" => $displayName, "type" => $type, "isAdmin" => $isAdmin );
           }
           SC::get()->setParam("loggedUserData", $loggedUserData);
           header('HTTP/1.0 302 Found');
