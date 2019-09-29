@@ -16,4 +16,7 @@
   define("PATH_TO_ENT_CAS","https://ent.domaine/cas/login?service=https://monsite.fr/api/session");
   define("PATH_TO_ENT_CAS_VALIDATE","https://ent.domaine.fr/cas/serviceValidate");
   define("CAS_MAIL_DOMAIN","ent.domain.fr");
+
+  // admins
+  define("ADMIN_ACCOUNTS","")
 ?>
