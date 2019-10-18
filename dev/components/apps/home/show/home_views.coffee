@@ -28,6 +28,7 @@ OnPanel = View.extend {
   className: "jumbotron"
   template: on_tpl
   triggers: {
+    "click a.js-admin-droits": "droits:list"
   }
 
 }
