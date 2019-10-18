@@ -4,6 +4,7 @@ namespace RouteController;
 use ErrorController as EC;
 use AuthController as AC;
 use SessionController as SC;
+use BDDObject\Droit;
 
 class session
 {
@@ -23,7 +24,18 @@ class session
     public function fetch()
     {
         $ac = new AC();
-        return $ac->getloggedUserData();
+        $user = $ac->getloggedUserData();
+        if (isset($user["login"]))
+        {
+            $idEntUser = $user["login"];
+            $droits = Droit::getList(array("idEntUser" => $idEntUser));
+        }
+        else
+        {
+            $droits = array();
+        }
+        $user["droits"] = $droits;
+        return $user;
     }
 
     public function delete()
