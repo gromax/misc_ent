@@ -10,8 +10,10 @@ function loadRouter($devMode=false)
   // session
   $router->addRule('api/session', 'session', 'fetch', 'GET'); // Session active
   $router->addRule('api/session/:id', 'session', 'delete', 'DELETE'); // Déconnexion
-
-
+  // Droits
+  $router->addRule('api/droits', 'droits', 'fetchList', 'GET'); // liste des droits, pour admin
+  $router->addRule('api/droits', 'droits', 'insert', 'POST'); // insertion droit, pour admin
+  $router->addRule('api/droits/:id', 'droits', 'delete', 'DELETE'); // suppression droit, pour admin
 
   return $router;
 
