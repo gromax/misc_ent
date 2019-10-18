@@ -46,6 +46,7 @@ Manager = Marionette.Application.extend {
     historyStart = () ->
       require('apps/common/app_default.coffee') # mettre en premier (étrangement...)
       require('apps/home/app_home.coffee')
+      require('apps/droits/app_droits.coffee')
       require('apps/header/app_header.coffee')
       # import des différentes app
       self.trigger "header:show"
