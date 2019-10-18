@@ -16,6 +16,8 @@ Controller = MnObject.extend {
 
   showOnHome: ->
     view = new OnPanel { model: app.Auth }
+    view.on "droits:list", ->
+      app.trigger("droits:list")
     app.regions.getRegion('main').show(view)
 
   casloginfailed:  ->
