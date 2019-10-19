@@ -28,7 +28,7 @@ class session
         if (isset($user["login"]))
         {
             $idEntUser = $user["login"];
-            $droits = Droit::getList(array("idEntUser" => $idEntUser));
+            $droits = array_column(Droit::getList(array("idEntUser" => $idEntUser)), "idDroit");
         }
         else
         {
