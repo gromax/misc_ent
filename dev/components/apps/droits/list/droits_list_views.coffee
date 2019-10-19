@@ -16,10 +16,6 @@ ItemView = View.extend {
   tagName: "tr"
   template: templateItem
   behaviors: [DestroyWarn, FlashItem]
-  triggers: {
-    "click td a.js-edit": "edit"
-    "click td a.js-editPwd": "editPwd"
-  }
 }
 
 DroitsCollectionView = CollectionView.extend {
