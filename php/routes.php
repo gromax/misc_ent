@@ -14,6 +14,12 @@ function loadRouter($devMode=false)
   $router->addRule('api/droits', 'droits', 'fetchList', 'GET'); // liste des droits, pour admin
   $router->addRule('api/droits', 'droits', 'insert', 'POST'); // insertion droit, pour admin
   $router->addRule('api/droits/:id', 'droits', 'delete', 'DELETE'); // suppression droit, pour admin
+  // RendezVous
+  $router->addRule('api/rendezVous', 'rendezVousManager', 'fetchList', 'GET'); // liste des rendezVous
+  $router->addRule('api/rendezVous', 'rendezVousManager', 'insert', 'POST'); // insertion droit, pour ayant droit 1
+  $router->addRule('api/rendezVous/:id', 'rendezVousManager', 'delete', 'DELETE'); // suppression droit, pour ayant droit 1
+
+
 
   return $router;
 
