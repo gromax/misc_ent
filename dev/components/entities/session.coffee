@@ -25,6 +25,8 @@ Session = Backbone.Model.extend {
         displayName:"Déconnecté"
         login: ""
       }
+    if logged.droits
+      logged.droits = (Number droit for droit in logged.droits)
     return logged
 
   getAuth: (callback)->
