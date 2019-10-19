@@ -55,7 +55,22 @@ final class Droit extends Item
       }
       return true;
     } catch(MeekroDBException $e) {
-      EC::addBDDError($e->getMessage(), "Evenement/Suppression liste");
+      EC::addBDDError($e->getMessage(), "Droit/Suppression liste");
+    }
+    return false;
+  }
+
+  public static function has($idEntUser, $idDroit)
+  {
+    require_once BDD_CONFIG;
+    try {
+      $bdd_result = DB::queryFirstRow("SELECT id FROM ".PREFIX_BDD."droits WHERE idEntUser=%s AND idDroit=%i", $idEntUser, $idDroit);
+      if ($bdd_result !== null)
+      {
+        return true;
+      }
+    } catch(MeekroDBException $e) {
+      if (DEV) return array('error'=>true, 'message'=>"#Droits/has : ".$e->getMessage());
     }
     return false;
   }
