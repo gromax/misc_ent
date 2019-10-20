@@ -18,10 +18,11 @@ ItemView = View.extend {
   behaviors: [DestroyWarn, FlashItem]
   triggers: {
     "click td a.js-edit": "edit"
+    "click": "show"
   }
 }
 
-RendezVousCollectionView = CollectionView.extend {
+OffreRendezVousCollectionView = CollectionView.extend {
   tagName: "table"
   className: "table table-hover"
   getTemplate: -> templateList
@@ -33,11 +34,11 @@ RendezVousCollectionView = CollectionView.extend {
   filterKeys: ["idEntUser", "title", "filter", "description"]
 }
 
-NewRendezVousView = View.extend {
+NewOffreRendezVousView = View.extend {
   template: templateNew
   behaviors: [SubmitClicked, EditItem]
   initialize: ->
     @title = "Créer un nouveau type de RDV"
 }
 
-export { RendezVousCollectionView, NewRendezVousView }
+export { OffreRendezVousCollectionView, NewOffreRendezVousView }
