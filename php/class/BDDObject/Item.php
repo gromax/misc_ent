@@ -65,6 +65,9 @@ abstract class Item
           case "date":
             $filtered_values[$key] = $values[$key];
             break;
+          case "time":
+            $filtered_values[$key] = $values[$key];
+            break;
           default:
             $filtered_values[$key] = $values[$key];
         }
