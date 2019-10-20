@@ -4,6 +4,7 @@ import missing_tpl from "templates/common/missing.tpl"
 import alert_tpl from 'templates/common/alert.tpl'
 import list_layout_tpl from 'templates/common/list-layout.tpl'
 import list_panel_tpl from 'templates/common/list-panel.tpl'
+import list_panel_without_filter_tpl from 'templates/common/list-panel-without-filter.tpl'
 import work_in_progress_tpl from 'templates/common/workInProgress.tpl';
 
 WorkInProgressView = View.extend {
@@ -24,6 +25,20 @@ ListPanel = View.extend {
       title: @getOption "title"
       showAddButton: @getOption "showAddButton"
       filterCriterion: @getOption("filterCriterion").replace(/\+/g," ")
+    }
+}
+
+ListPanelWithoutFilter = View.extend {
+  showAddButton: false
+  title: ""
+  template: list_panel_without_filter_tpl
+  triggers: {
+    "click button.js-new": "item:new"
+  }
+  templateContext: ->
+    {
+      title: @getOption "title"
+      showAddButton: @getOption "showAddButton"
     }
 }
 
@@ -65,4 +80,4 @@ AlertView = View.extend {
 
 }
 
-export { MissingView, AlertView, ListPanel, ListLayout, WorkInProgressView }
+export { MissingView, AlertView, ListPanel, ListPanelWithoutFilter, ListLayout, WorkInProgressView }
