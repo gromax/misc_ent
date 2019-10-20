@@ -1,6 +1,6 @@
 import { MnObject } from 'backbone.marionette'
 import { ListPanel, ListLayout } from 'apps/common/common_views.coffee'
-import { RendezVousCollectionView, NewRendezVousView } from 'apps/rendezVous/admin-list/list_views.coffee'
+import { OffreRendezVousCollectionView, NewOffreRendezVousView } from 'apps/rendezVous/admin-list/list_views.coffee'
 import { app } from 'app'
 
 Controller = MnObject.extend {
@@ -9,16 +9,16 @@ Controller = MnObject.extend {
     app.trigger "loading:up"
     channel = @getChannel()
     require "entities/rendezVous.coffee"
-    fetching = channel.request("rendezVous:fetch")
+    fetching = channel.request("rendezVous:offres:fetch:list")
     $.when(fetching).done( (items)->
       listLayout = new ListLayout()
-      listView = new RendezVousCollectionView {
+      listView = new OffreRendezVousCollectionView {
         collection: items
       }
       listPanel = new ListPanel {
         listView
-        appTrigger: "admin:rendezVous:filter"
-        title: "Types de rendez-vous"
+        appTrigger: "admin:offresRendezVous:filter"
+        title: "Propositions de rendez-vous"
         filterCriterion:criterion
         showAddButton:true
       }
@@ -28,13 +28,16 @@ Controller = MnObject.extend {
         listLayout.getRegion('itemsRegion').show(listView)
 
       listPanel.on "item:new", ->
-        Item = require("entities/rendezVous.coffee").Item
+        Item = require("entities/rendezVous.coffee").OffreItem
         newItem = new Item()
-        view = new NewRendezVousView {
+        view = new NewOffreRendezVousView {
           model: newItem
           listView: listView
         }
         app.regions.getRegion('dialog').show(view)
+
+      listView.on "item:show", (item) ->
+        app.trigger("admin:rendezVous:offre", item.model.get("id"))
 
       app.regions.getRegion('main').show(listLayout)
     ).fail( (response)->
