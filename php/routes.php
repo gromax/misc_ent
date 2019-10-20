@@ -15,11 +15,12 @@ function loadRouter($devMode=false)
   $router->addRule('api/droits', 'droits', 'insert', 'POST'); // insertion droit, pour admin
   $router->addRule('api/droits/:id', 'droits', 'delete', 'DELETE'); // suppression droit, pour admin
   // RendezVous
-  $router->addRule('api/rendezVous', 'rendezVousManager', 'fetchList', 'GET'); // liste des rendezVous
-  $router->addRule('api/rendezVous', 'rendezVousManager', 'insert', 'POST'); // insertion droit, pour ayant droit 1
-  $router->addRule('api/rendezVous/:id', 'rendezVousManager', 'delete', 'DELETE'); // suppression droit, pour ayant droit 1
-
-
+  $router->addRule('api/rendezVous/offres', 'rendezVousManager', 'fetchList', 'GET'); // liste des rendezVous
+  $router->addRule('api/rendezVous/offres', 'rendezVousManager', 'insert', 'POST'); // insertion droit, pour ayant droit 1
+  $router->addRule('api/rendezVous/offres/:id', 'rendezVousManager', 'delete', 'DELETE'); // suppression droit, pour ayant droit 1
+  $router->addRule('api/rendezVous/offres/:id', 'rendezVousManager', 'fetch', 'GET'); // chargement d'un rendezVous avec les créneaux enfants
+  $router->addRule('api/rendezVous/creneaux/:id', 'rendezVousManager', 'deleteCreneau', 'DELETE'); // suppresion d'un créneau
+  $router->addRule('api/rendezVous/creneaux', 'rendezVousManager', 'insertCreneau', 'POST'); // insertion d'un créneau
 
   return $router;
 
