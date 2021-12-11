@@ -19,6 +19,7 @@ function loadRouter($devMode=false)
   $router->addRule('api/rendezVous/offres', 'rendezVousManager', 'insert', 'POST'); // insertion droit, pour ayant droit 1
   $router->addRule('api/rendezVous/offres/:id', 'rendezVousManager', 'delete', 'DELETE'); // suppression droit, pour ayant droit 1
   $router->addRule('api/rendezVous/offres/:id', 'rendezVousManager', 'fetch', 'GET'); // chargement d'un rendezVous avec les créneaux enfants
+  $router->addRule('api/rendezVous/plage', 'rendezVousManager', 'insertPlageRendezVous', 'POST'); // insertion de rdv dans une plage
   $router->addRule('api/rendezVous/creneaux/:id', 'rendezVousManager', 'deleteCreneau', 'DELETE'); // suppresion d'un créneau
   $router->addRule('api/rendezVous/creneaux', 'rendezVousManager', 'insertCreneau', 'POST'); // insertion d'un créneau
 
