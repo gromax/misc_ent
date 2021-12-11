@@ -1,6 +1,6 @@
 import { MnObject } from 'backbone.marionette'
 import { ListLayout } from 'apps/common/common_views.coffee'
-import { RendezVousCollectionView, NewCreneauRendezVousView, PanelView } from 'apps/rendezVous/admin-item/list_views.coffee'
+import { RendezVousCollectionView, NewPlageRendezVousView, PanelView } from 'apps/rendezVous/admin-item/list_views.coffee'
 import { app } from 'app'
 
 Controller = MnObject.extend {
@@ -25,11 +25,12 @@ Controller = MnObject.extend {
         listLayout.getRegion('itemsRegion').show(listView)
 
       listPanel.on "item:new", ->
-        Item = require("entities/rendezVous.coffee").CreneauItem
+        Item = require("entities/rendezVous.coffee").PlageItem
         newItem = new Item({ idOffre: id})
-        view = new NewCreneauRendezVousView {
+        view = new NewPlageRendezVousView {
           model: newItem
           listView: listView
+          triggerOnSuccess: {route:"admin:rendezVous:offre:refresh", data:id}
         }
         #DatePicker # nécessaire au bon chargement
         app.regions.getRegion('dialog').show(view)
