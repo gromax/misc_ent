@@ -1,6 +1,6 @@
 import { MnObject } from 'backbone.marionette'
 import { ListLayout } from 'apps/common/common_views.coffee'
-import { CreneauRendezVousCollectionView, NewCreneauRendezVousView, PanelView } from 'apps/rendezVous/admin-item/list_views.coffee'
+import { RendezVousCollectionView, NewCreneauRendezVousView, PanelView } from 'apps/rendezVous/admin-item/list_views.coffee'
 import { app } from 'app'
 
 Controller = MnObject.extend {
@@ -10,10 +10,10 @@ Controller = MnObject.extend {
     channel = @getChannel()
     require "entities/rendezVous.coffee"
     fetching = channel.request("rendezVous:offre:fetch", id)
-    $.when(fetching).done( (itemRDV, itemsCreneau)->
+    $.when(fetching).done( (itemRDV, itemsRendezVous)->
       listLayout = new ListLayout()
-      listView = new CreneauRendezVousCollectionView {
-        collection: itemsCreneau
+      listView = new RendezVousCollectionView {
+        collection: itemsRendezVous
       }
 
       listPanel = new PanelView {
