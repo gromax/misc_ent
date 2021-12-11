@@ -65,11 +65,11 @@ RendezVousCollection = Backbone.Collection.extend {
 }
 
 # Utilisé pour créer un paquet de créneaux
-CreneauItem = Backbone.Model.extend {
-  urlRoot: "api/rendezVous/creneaux"
+PlageItem = Backbone.Model.extend {
+  urlRoot: "api/rendezVous/plage"
   toJSON: ->
     data = @attributes
-    data.date = data.dateFr.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/,"$3-$2-$1") + " " + data.debut
+    data.date = data.dateFr.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/,"$3-$2-$1") + " " + data.debut + ":00"
     _.pick(data, "idOffre", "date", "nombre", "duree")
   validate: (attrs, options) ->
     errors = {}
@@ -79,7 +79,7 @@ CreneauItem = Backbone.Model.extend {
     if not attrs.debut
       errors.debut = "Ne doit pas être vide"
     else if not reTime.test(attrs.debut)
-      errors.debut = "Format invalide"
+      errors.debut = "Format hh:mm"
     if not attrs.nombre
       errors.nombre = "Ne doit pas être vide"
     else if not reInt.test(attrs.nombre)
@@ -140,5 +140,5 @@ channel.reply('rendezVous:offre:fetch', API.fetch )
 export {
   OffreItem
   OffresCollection
-  CreneauItem
+  PlageItem
 }
