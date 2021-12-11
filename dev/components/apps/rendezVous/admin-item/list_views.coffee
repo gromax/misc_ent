@@ -41,11 +41,11 @@ RendezVousCollectionView = CollectionView.extend {
   behaviors: [SortList]
 }
 
-NewCreneauRendezVousView = View.extend {
+NewPlageRendezVousView = View.extend {
   template: templateNew
   behaviors: [SubmitClicked, EditItem]
   initialize: ->
     @title = "Créer un nouveau préneau"
 }
 
-export { RendezVousCollectionView, NewCreneauRendezVousView, PanelView }
+export { RendezVousCollectionView, NewPlageRendezVousView, PanelView }
