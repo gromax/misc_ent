@@ -6,6 +6,7 @@ use AuthController as AC;
 use BDDObject\OffreRendezVous;
 use BDDObject\CreneauRendezVous;
 use BDDObject\Droit;
+use BDDObject\RendezVous;
 
 class rendezVousManager
 {
@@ -42,7 +43,7 @@ class rendezVousManager
 
         return array(
             "offre" => $item->getValues(),
-            "creneaux" => $item->getCreneauxList()
+            "rendezvous" => $item->getRendezVousList()
         );
     }
 
@@ -85,40 +86,7 @@ class rendezVousManager
         return false;
     }
 
-    public function deleteCreneau()
-    {
-        $ac = new AC();
-        $user = $ac->getloggedUserData();
-        if ($user["type"]=="off")
-        {
-            EC::set_error_code(401);
-            return false;
-        }
-        $id = (integer) $this->params['id'];
-        $itemCreneau = CreneauRendezVous::getObject($id);
-        if ($itemCreneau === null)
-        {
-            EC::set_error_code(404);
-            return false;
-        }
-        if (!Droit::has($user["login"], 1))
-        {
-            // vérification du droit d'écrire les rendez-vous
-            // Peut-être l'utilisateur est le propriétaire
-            $itemParent = $itemCreneau.getParent();
-            if (($itemParent === null)||!$itemParent->isOwner($user["login"]))
-            {
-                EC::set_error_code(403);
-                return false;
-            }
-        }
-        if ($itemCreneau->delete())
-        {
-            return array( "message" => "Model successfully destroyed!");
-        }
-        EC::set_error_code(501);
-        return false;
-    }
+
 
     public function insert()
     {
@@ -143,6 +111,9 @@ class rendezVousManager
         EC::set_error_code(501);
         return false;
     }
+
+    // Créneau
+    // devra disparaître
 
     public function insertCreneau()
     {
@@ -185,6 +156,130 @@ class rendezVousManager
         EC::set_error_code(501);
         return false;
     }
+
+    public function deleteCreneau()
+    {
+        $ac = new AC();
+        $user = $ac->getloggedUserData();
+        if ($user["type"]=="off")
+        {
+            EC::set_error_code(401);
+            return false;
+        }
+        $id = (integer) $this->params['id'];
+        $itemCreneau = CreneauRendezVous::getObject($id);
+        if ($itemCreneau === null)
+        {
+            EC::set_error_code(404);
+            return false;
+        }
+        if (!Droit::has($user["login"], 1))
+        {
+            // vérification du droit d'écrire les rendez-vous
+            // Peut-être l'utilisateur est le propriétaire
+            $itemParent = $itemCreneau.getParent();
+            if (($itemParent === null)||!$itemParent->isOwner($user["login"]))
+            {
+                EC::set_error_code(403);
+                return false;
+            }
+        }
+        if ($itemCreneau->delete())
+        {
+            return array( "message" => "Model successfully destroyed!");
+        }
+        EC::set_error_code(501);
+        return false;
+    }
+
+    // Rendez Vous
+    public function insertRendezVous()
+    {
+        $ac = new AC();
+        $user = $ac->getloggedUserData();
+        if ($user["type"]=="off")
+        {
+            EC::set_error_code(401);
+            return false;
+        }
+        $data = json_decode(file_get_contents("php://input"),true);
+        if (!isset($data["idOffre"]))
+        {
+            EC::set_error_code(501);
+            return false;
+        }
+        $idOffre = (integer) $data["idOffre"];
+        if (!Droit::has($user["login"], 1))
+        {
+            // vérification du droit d'écrire les rendez-vous
+            // Peut-être l'utilisateur est le propriétaire
+            $itemParent = OffreRendezVous::getObject($idOffre);
+            if (($itemParent === null)||!$itemParent->isOwner($user["login"]))
+            {
+                EC::set_error_code(403);
+                return false;
+            }
+        }
+        # l'utilisateur a le droit d'ajouter le créneau
+        if (!isset($data["date"]) || !isset($data["nombre"]) || !isset($data["duree"]))
+        {
+            EC::set_error_code(501);
+            return false;
+        }
+
+        $time_stamp = strtotime($data["date"]);
+        $duree = (integer) $data["duree"];
+        $nombre = (integer) $data["nombre"];
+        $insertions = array();
+        $i = 0;
+        while ($i < $nombre)
+        {
+            $insertions[] = array(
+                "idOffre" => $idOffre,
+                "date" => date("Y-m-d h:i:s", $time_stamp),
+            );
+            $i += 1;
+            $time_stamp += $duree*60;
+        }
+        $result = RendezVous::insert_list($insertions);
+        return $result;
+    }
+
+    public function deleteRendezVous()
+    {
+        $ac = new AC();
+        $user = $ac->getloggedUserData();
+        if ($user["type"]=="off")
+        {
+            EC::set_error_code(401);
+            return false;
+        }
+        $id = (integer) $this->params['id'];
+        $itemRDV = RendezVous::getObject($id);
+        if ($itemRDV === null)
+        {
+            EC::set_error_code(404);
+            return false;
+        }
+        if (!Droit::has($user["login"], 1))
+        {
+            // vérification du droit d'écrire les rendez-vous
+            // Peut-être l'utilisateur est le propriétaire
+            $itemParent = $itemRDV.getParent();
+            if (($itemParent === null)||!$itemParent->isOwner($user["login"]))
+            {
+                EC::set_error_code(403);
+                return false;
+            }
+        }
+        if ($itemRDV->delete())
+        {
+            return array( "message" => "Model successfully destroyed!");
+        }
+        EC::set_error_code(501);
+        return false;
+    }
+
 
 }
 ?>
