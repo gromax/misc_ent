@@ -193,7 +193,7 @@ class rendezVousManager
     }
 
     // Rendez Vous
-    public function insertRendezVous()
+    public function insertPlageRendezVous()
     {
         $ac = new AC();
         $user = $ac->getloggedUserData();
@@ -236,13 +236,13 @@ class rendezVousManager
         {
             $insertions[] = array(
                 "idOffre" => $idOffre,
-                "date" => date("Y-m-d h:i:s", $time_stamp),
+                "date" => date("Y-m-d H:i:s", $time_stamp),
             );
             $i += 1;
             $time_stamp += $duree*60;
         }
         $result = RendezVous::insert_list($insertions);
-        return $result;
+        return array("inserted"=> $result);
     }
 
     public function deleteRendezVous()
