@@ -66,7 +66,7 @@ final class OffreRendezVous extends Item
   public function customDelete()
   {
     $options = array("idOffre"=>$this->id);
-    return (CreneauRendezVous::deleteList($options));
+    return (RendezVous::deleteList($options));
   }
 
   public function insert_validation($data=array())
@@ -99,9 +99,9 @@ final class OffreRendezVous extends Item
     return ($this->values['idEntUser'] == $idEntUser);
   }
 
-  public function getCreneauxList()
+  public function getRendezVousList()
   {
-    $liste = CreneauRendezVous::getList(array("idOffre"=>$this->id));
+    $liste = RendezVous::getList(array("idOffre"=>$this->id));
     if (isset($liste['error']))
     {
       return array();
