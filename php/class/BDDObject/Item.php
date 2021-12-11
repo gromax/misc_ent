@@ -17,6 +17,37 @@ abstract class Item
 
   ##################################### METHODES STATIQUES #####################################
 
+  public static function insert_list($list_values)
+  {
+    $className = get_called_class();
+    $items_to_insert = array();
+    foreach ( $list_values as $value )
+    {
+      $item = new $className($value);
+      $parsedItem = $item->getInsertParsedValues();
+      if ($parsedItem !== false)
+      {
+          $items_to_insert[] = $parsedItem;
+      }
+    }
+    $n = count($items_to_insert);
+    if ( $n == 0)
+    {
+      EC::add("Aucun item ajouté dans la liste.");
+      return 0;
+    }
+    if ($className::SAVE_IN_SESSION) $session=SC::get()->unsetParam($className::$BDDName);
+    require_once BDD_CONFIG;
+    try {
+      DB::insert(PREFIX_BDD.static::$BDDName, $items_to_insert);
+    } catch(MeekroDBException $e) {
+      EC::addBDDError($e->getMessage(), static::$BDDName."/insertion_list");
+      return null;
+    }
+    EC::add($n." items de la liste insérée avec succès.");
+    return $n;
+  }
+
   protected static function champs()
   {
     return array();
@@ -209,11 +240,7 @@ abstract class Item
 
   public function insertion()
   {
-    if (method_exists($this, "parseBeforeInsert")) {
-      $toInsert = $this->parseBeforeInsert();
-    } else {
-      $toInsert = $this->values;
-    }
+    $toInsert = $this->getInsertParsedValues();
 
     if ($toInsert === false) {
       return null;
@@ -291,6 +318,15 @@ abstract class Item
         unset($out[$key]);
       }
       return $out;
+    } else {
+      return $this->values;
+    }
+  }
+
+  public function getInsertParsedValues()
+  {
+    if (method_exists($this, "parseBeforeInsert")) {
+      return $this->parseBeforeInsert();
     } else {
       return $this->values;
     }
