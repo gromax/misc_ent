@@ -42,44 +42,58 @@ OffresCollection = Backbone.Collection.extend {
   comparator: "idEntUser"
 }
 
-CreneauItem = Backbone.Model.extend {
-  urlRoot: "api/rendezVous/creneaux"
+RendezVousItem = CreneauItem = Backbone.Model.extend {
+  urlRoot: "api/rendezVous/item"
   toJSON: ->
     data = @attributes
-    data.date = data.dateFr.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/,"$3-$2-$1")
-    _.pick(data, "id", "idOffre", "date", "debut", "fin")
+    data.date = data.dateFr.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4}) ([0-9]{2}):([0-9]{2}):([0-9]{2})/,"$3-$2-$1 $4:$5:$6")
+    _.pick(data, "id", "idOffre", "date", "idEntUser", "description")
   parse: (data) ->
     if data.id
       data.id = Number(data.id)
     if data.idOffre
       data.idOffre = Number(data.idOffre)
     if data.date
-      data.dateFr = data.date.replace(/([0-9]{4})-([0-9]{2})-([0-9]{2})/,"$3/$2/$1")
+      data.dateFr = data.date.replace(/([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2})-([0-9]{2})-([0-9]{2})/,"$3/$2/$1 $4:$5:$6")
     return data
+}
+
+RendezVousCollection = Backbone.Collection.extend {
+  url: "api/rendezVous"
+  model: RendezVousItem
+  comparator: "date"
+}
+
+# Utilisé pour créer un paquet de créneaux
+CreneauItem = Backbone.Model.extend {
+  urlRoot: "api/rendezVous/creneaux"
+  toJSON: ->
+    data = @attributes
+    data.date = data.dateFr.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/,"$3-$2-$1") + " " + data.debut
+    _.pick(data, "idOffre", "date", "nombre", "duree")
   validate: (attrs, options) ->
     errors = {}
     reTime = /^[0-9]{2}:[0-9]{2}$/
     reDate = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/
+    reInt = /^[1-9]*[0-9]$/
     if not attrs.debut
       errors.debut = "Ne doit pas être vide"
     else if not reTime.test(attrs.debut)
       errors.debut = "Format invalide"
-    if not attrs.fin
-      errors.fin = "Ne doit pas être vide"
-    else if not reTime.test(attrs.fin)
-      errors.fin = "Format invalide"
+    if not attrs.nombre
+      errors.nombre = "Ne doit pas être vide"
+    else if not reInt.test(attrs.nombre)
+      errors.nombre = "Doit être un nombre entier"
+    if not attrs.duree
+      errors.duree = "Ne doit pas être vide"
+    else if not reInt.test(attrs.nombre)
+      errors.duree = "Doit être un nombre entier"
     if not attrs.dateFr
       errors.dateFr = "Ne doit pas être vide"
     else if not reDate.test(attrs.dateFr)
       errors.dateFr = "Format invalide"
     if not _.isEmpty(errors)
       return errors
-}
-
-CreneauCollection = Backbone.Collection.extend {
-  url: "api/rendezVous"
-  model: CreneauItem
-  comparator: "date"
 }
 
 API = {
@@ -108,9 +122,10 @@ API = {
     })
 
     request.done( (data)->
-      creneaux = new CreneauCollection(data.creneaux, {parse:true})
+      rendezVous = new RendezVousCollection(data.rendezvous, {parse:true})
       offreRendezVous = new OffreItem(data.offre, {parse:true})
-      defer.resolve(offreRendezVous, creneaux)
+
+      defer.resolve(offreRendezVous, rendezVous)
     ).fail( (response)->
       defer.reject(response)
     )
