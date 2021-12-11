@@ -197,6 +197,7 @@ EditItem = Behavior.extend {
     model = @view.model
     # éventuellement une création, si on a fourni "collection"
     updatingFunctionName = @getOption "updatingFunctionName"
+
     updatingItem = model[updatingFunctionName](data)
     if updatingItem
       app = require('app').app
@@ -206,7 +207,7 @@ EditItem = Behavior.extend {
         itemView = view.getOption("itemView")
         listView = view.getOption("listView")
         itemView?.render() # cas d'une itemView existante
-        if (collection=listView?.collection) and not collection.get(model.get("id"))
+        if (collection=listView?.collection) and (id = model.get("id")) and not collection.get(id)
           # c'est un ajout
           collection.add model
         view.trigger "dialog:close" # si ce n'est pas une vue dialog, le trigger ne fait rien
@@ -217,6 +218,9 @@ EditItem = Behavior.extend {
         view.trigger "form:data:valid"
         onSuccess = view.getOption("onSuccess")
         onSuccess?(model,data)
+        triggerOnSuccess = view.getOption("triggerOnSuccess")
+        if triggerOnSuccess
+          app.trigger(triggerOnSuccess.route, triggerOnSuccess.data)
       ).fail( (response)->
         switch response.status
           when 422
