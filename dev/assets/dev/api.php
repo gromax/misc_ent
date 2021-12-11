@@ -12,6 +12,25 @@ ini_set('error_log', dirname(__file__) . '/log_error_php.txt');
 // Afficher les erreurs et les avertissements
 error_reporting(E_ALL);
 
+
+$secure = true; // if you only want to receive the cookie over HTTPS
+$httponly = true; // prevent JavaScript access to session cookie
+$samesite = 'strict';
+$maxlifetime = 30*60;
+if(PHP_VERSION_ID < 70300) {
+    session_set_cookie_params($maxlifetime, '/; samesite='.$samesite, $_SERVER['HTTP_HOST'], $secure, $httponly);
+} else {
+    session_set_cookie_params([
+        'lifetime' => $maxlifetime,
+        'path' => '/',
+        'domain' => $_SERVER['HTTP_HOST'],
+        'secure' => $secure,
+        'httponly' => $httponly,
+        'samesite' => $samesite
+    ]);
+}
+
+
 require_once "../php/myFunctions.php";
 require_once "../php/constantesDev.php";
 
