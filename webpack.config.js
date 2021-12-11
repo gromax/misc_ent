@@ -1,10 +1,17 @@
 const webpack = require('webpack');
+
+
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+// minification de css
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+
+// minification de JS
+const TerserPlugin = require("terser-webpack-plugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const merge = require('webpack-merge');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+
+
 const DashboardPlugin = require("webpack-dashboard/plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -97,22 +104,24 @@ let config = {
       filename: devMode ? '[name].css' : '[name].[contentHash].css',
       chunkFilename: devMode ? '[id].css' : '[id].[contentHash].css',
     }),
-    new CopyWebpackPlugin([
-      {
-        from: devMode ? './dev/assets/dev/.htaccess' : './dev/assets/prod/.htaccess'
-      },
-      {
-        from: './dev/assets/favicon.ico',
-        to: './favicon.ico'
-      },
-      {
-        from: './dev/assets/favicon.png',
-        to: './favicon.png'
-      },
-      {
-        from: devMode ? './dev/assets/dev/api.php' : './dev/assets/prod/api.php'
-      }
-    ]),
+    new CopyWebpackPlugin({
+      patterns:[
+        {
+          from: devMode ? './dev/assets/dev/.htaccess' : './dev/assets/prod/.htaccess'
+        },
+        {
+          from: './dev/assets/favicon.ico',
+          to: './favicon.ico'
+        },
+        {
+          from: './dev/assets/favicon.png',
+          to: './favicon.png'
+        },
+        {
+          from: devMode ? './dev/assets/dev/api.php' : './dev/assets/prod/api.php'
+        }
+      ]
+    }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
@@ -160,9 +169,9 @@ let config = {
 }
 
 if (devLiveReload) {
-	var LiveReloadPlugin = require('webpack-livereload-plugin');
-	config.plugins.push(new LiveReloadPlugin());
-}
+  var LiveReloadPlugin = require('webpack-livereload-plugin');
+  config.plugins.push(new LiveReloadPlugin());
+};
 
 module.exports = config;
 
@@ -170,16 +179,13 @@ module.exports = config;
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.optimization = {
+    minimize: true,
     minimizer: [
-      new UglifyJsPlugin({
-        cache: true,
+      new TerserPlugin({
         parallel: true,
-        sourceMap: true // set to true if you want JS source maps
       }),
-      new OptimizeCSSAssetsPlugin({})
+      new CssMinimizerPlugin({})
     ]
-  }
+  };
 
 }
-
-
