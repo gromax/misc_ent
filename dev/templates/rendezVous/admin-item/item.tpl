@@ -1,7 +1,7 @@
 <td><span class="badge badge-pill badge-primary"><%- id %></span></td>
 <td><%- dateFr %></td>
-<td><%- debut %></td>
-<td><%- fin %></td>
+<td><%- description %></td>
+<td><%- idEntUser %></td>
 <td align="right">
   <div class="btn-group" role="group">
     <!-- Bouton suppression -->

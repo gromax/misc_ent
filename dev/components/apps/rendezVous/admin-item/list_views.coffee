@@ -30,7 +30,7 @@ ItemView = View.extend {
   }
 }
 
-CreneauRendezVousCollectionView = CollectionView.extend {
+RendezVousCollectionView = CollectionView.extend {
   tagName: "table"
   className: "table table-hover"
   getTemplate: -> templateList
@@ -48,4 +48,4 @@ NewCreneauRendezVousView = View.extend {
     @title = "Créer un nouveau préneau"
 }
 
-export { CreneauRendezVousCollectionView, NewCreneauRendezVousView, PanelView }
+export { RendezVousCollectionView, NewCreneauRendezVousView, PanelView }
