@@ -29,6 +29,9 @@ app.on "admin:rendezVous:offre", (id) ->
   app.navigate("admin/rendezVous/offres/#{id}")
   router.showOffreItem(id)
 
+app.on "admin:rendezVous:offre:refresh", (id) ->
+  router.showOffreItem(id)
+
 app.on "admin:rendezVous:offres:filter", (criterion) ->
   if criterion
     app.navigate "admin/rendezVous/offres/list/filter/criterion:#{criterion}"
