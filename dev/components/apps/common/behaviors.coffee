@@ -30,20 +30,25 @@ SortList = Behavior.extend {
 FilterList = Behavior.extend {
   initialize: ->
     filterCriterion = @view.getOption("filterCriterion") or ""
+    filterCriterion = filterCriterion.replace(/\s+/g," ").trim()
     if (filterCriterion isnt "")
       @view.trigger("set:filter:criterion",filterCriterion, { preventRender: true })
   onSetFilterCriterion: (criterion, options) ->
-    criterion = criterion.normalize('NFD').replace(/\+/g," ").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    criterion = criterion.normalize('NFD').replace(/\+/g," ").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g," ").toLowerCase().trim()
     if criterion is "" or typeof @view.filterKeys is "undefined"
       @view.removeFilter(options)
     else
       filterKeys = @view.filterKeys
-      parseFct = (model) ->
-        reductionFct = (m,k) ->
-          m+model.get(k)
-        _.reduce(filterKeys, reductionFct, "").normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
-      filterFct = (view, index, children) ->
-        parseFct(view.model).indexOf(criterion) isnt -1
+      if typeof filterKeys is "function"
+        filterFct = (view, index, children) ->
+          filterKeys(view.model, criterion)
+      else
+        parseFct = (model) ->
+          reductionFct = (m,k) ->
+            m + model.get(k)
+          _.reduce(filterKeys, reductionFct, "").normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()
+        filterFct = (view, index, children) ->
+          parseFct(view.model).indexOf(criterion) isnt -1
       @view.setFilter(filterFct, options)
 }
 
@@ -257,11 +262,11 @@ FilterPanel = Behavior.extend {
     # à partir du input
     e.preventDefault()
     criterion = @ui.criterion.val()
-    criterionForNav = criterion.replace(/\s/g,"+")
+    criterionForNav = criterion.replace(/\s+/g,"+")
     @triggerListView(criterion, criterionForNav)
   onSetFilterCriterion: (criterion)->
     # par un événement
-    criterionForNav = criterion.replace(/\s/g,"+")
+    criterionForNav = criterion.replace(/\s+/g,"+")
     @ui.criterion.val(criterion)
     @triggerListView(criterion, criterionForNav)
   triggerListView: (criterion, criterionForNav) ->
