@@ -3,17 +3,10 @@ import templateList from 'templates/rendezVous/admin-item/list.tpl'
 import templateItem from 'templates/rendezVous/admin-item/item.tpl'
 import templateNone from 'templates/rendezVous/admin-item/none.tpl'
 import templateNew from 'templates/rendezVous/admin-item/new.tpl'
-import templatePanel from 'templates/rendezVous/admin-item/panel.tpl'
 
-import { SortList, DestroyWarn, FlashItem, SubmitClicked, EditItem } from 'apps/common/behaviors.coffee'
+
+import { SortList, FilterList, DestroyWarn, FlashItem, SubmitClicked, EditItem } from 'apps/common/behaviors.coffee'
 import { app } from 'app'
-
-PanelView = View.extend {
-  template: templatePanel
-  triggers: {
-    "click button.js-new": "item:new"
-  }
-}
 
 NoItemView = View.extend {
   template:  templateNone
@@ -38,7 +31,18 @@ RendezVousCollectionView = CollectionView.extend {
   emptyView: NoItemView
   childViewContainer: "tbody"
   childViewEventPrefix: 'item'
-  behaviors: [SortList]
+  behaviors: [SortList, FilterList]
+  filterKeys: (model, criterion) ->
+    date = model.get('date')
+    idEntUser = model.get('idEntUser')
+    words = criterion.split(" ")
+    if words.length > 2
+      return false
+    if words.length == 1 and (date.indexOf(words[0]) isnt -1 or idEntUser.indexOf(words[0]) isnt -1)
+      return true
+    if (date.indexOf(words[0]) isnt -1 and idEntUser.indexOf(words[1]) isnt -1) or (date.indexOf(words[1]) isnt -1 and idEntUser.indexOf(words[0]) isnt -1)
+      return true
+    return false
 }
 
 NewPlageRendezVousView = View.extend {
@@ -48,4 +52,4 @@ NewPlageRendezVousView = View.extend {
     @title = "Créer un nouveau préneau"
 }
 
-export { RendezVousCollectionView, NewPlageRendezVousView, PanelView }
+export { RendezVousCollectionView, NewPlageRendezVousView }
