@@ -1,23 +1,27 @@
 import { MnObject } from 'backbone.marionette'
-import { ListLayout } from 'apps/common/common_views.coffee'
-import { RendezVousCollectionView, NewPlageRendezVousView, PanelView } from 'apps/rendezVous/admin-item/list_views.coffee'
+import { ListLayout, ListPanel } from 'apps/common/common_views.coffee'
+import { RendezVousCollectionView, NewPlageRendezVousView } from 'apps/rendezVous/admin-item/list_views.coffee'
 import { app } from 'app'
 
 Controller = MnObject.extend {
   channelName: 'entities'
-  list: (id)->
+  list: (id, criterion)->
     app.trigger "loading:up"
     channel = @getChannel()
     require "entities/rendezVous.coffee"
     fetching = channel.request("rendezVous:offre:fetch", id)
-    $.when(fetching).done( (itemRDV, itemsRendezVous)->
+    $.when(fetching).done( (offreRendezVous, itemsRendezVous)->
       listLayout = new ListLayout()
       listView = new RendezVousCollectionView {
         collection: itemsRendezVous
       }
 
-      listPanel = new PanelView {
-        model: itemRDV
+      listPanel = new ListPanel {
+        listView
+        appTrigger: (v,c) -> app.trigger("admin:rendezVous:offre:filter", id, c)
+        title: "Rendez-vous"
+        filterCriterion:criterion
+        showAddButton:true
       }
 
       listLayout.on "render", ->
