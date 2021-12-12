@@ -15,6 +15,7 @@ Controller = MnObject.extend {
       listView = new OffreRendezVousCollectionView {
         collection: items
       }
+
       listPanel = new ListPanel {
         listView
         appTrigger: "admin:offresRendezVous:filter"
